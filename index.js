@@ -48,10 +48,15 @@ app.post('/api/users', async (req, res) => {
   
 });
 
-app.post('/api/users/:_id/exercises', (req, res) => {
+app.post('/api/users/:_id/exercises', async (req, res) => {
 
   const userId = req.body[':_id'];
   console.log(userId);
+
+  /*
+  const userObj = await users.findOne({_id: userId});
+  console.log(userObj);
+  */
 
   //TODO
   //Build regex to validate duration and date format or 
