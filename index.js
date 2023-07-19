@@ -33,15 +33,19 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-app.post('/api/users', (req, res) => {
+app.post('/api/users', async (req, res) => {
 
   const userObj = {
     username: req.body.username
   }
+
+  const result = await users.insertOne(userObj);
   
+  console.log(result);
+  userObj['_id'] = result.insertedId;
+
   res.json(userObj);
   
-  console.log(req.body);
 });
 
 app.post('/api/users/:_id/exercises', (req, res) => {
