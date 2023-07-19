@@ -1,10 +1,11 @@
+// Modules
 const express = require('express')
 const app = express()
 const cors = require('cors')
 require('dotenv').config()
+const { MongoClient } = require('mongodb');
 
 // init database connexion
-const { MongoClient } = require('mongodb');
 const client = new MongoClient(process.env.DB_URL);
 const db = client.db('fcc-exercice-tracker');
 const users = db.collection('users');
@@ -22,11 +23,20 @@ console.log(exercices);
 
 app.use(cors())
 app.use(express.static('public'))
+// Parse URL-encoded bodies (as sent by HTML forms)
+app.use(express.urlencoded({extended: true}));
+// Parse JSON bodies (as sent by API clients)
+app.use(express.json());
+
+// routes
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
-
+app.post('/api/users', (req, res) => {
+  res.json({ message: "hello world"});
+  console.log(req.body);
+});
 
 
 
