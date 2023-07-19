@@ -49,6 +49,15 @@ app.post('/api/users', async (req, res) => {
 });
 
 app.post('/api/users/:_id/exercises', (req, res) => {
+
+  const userId = req.body[':_id'];
+  console.log(userId);
+
+  //TODO
+  //Build regex to validate duration and date format or 
+  //  For the date property, the toDateString method of the Date API can be used to achieve the expected output.
+
+  res.json({userId: userId});
   
 })
 
