@@ -34,9 +34,19 @@ app.get('/', (req, res) => {
 });
 
 app.post('/api/users', (req, res) => {
-  res.json({ message: "hello world"});
+
+  const userObj = {
+    username: req.body.username
+  }
+  
+  res.json(userObj);
+  
   console.log(req.body);
 });
+
+app.post('/api/users/:_id/exercises', (req, res) => {
+  
+})
 
 
 
