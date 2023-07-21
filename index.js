@@ -33,6 +33,19 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+// Get all users route
+app.get("/api/users", async (req, res) => {
+
+  const users = await UserModel.find({}).select("_id username");
+
+  if (!users) {
+    res.send("No users");
+  } else {
+    res.json(users);
+  }
+  
+});
+
 // Add User route
 app.post('/api/users', async (req, res) => {
 
@@ -99,7 +112,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
   res.json({userId: userId});
   
-})
+});
 
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
