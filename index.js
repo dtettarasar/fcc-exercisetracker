@@ -59,6 +59,24 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   const userId = req.body[':_id'];
   console.log(userId);
 
+  const {description, duration, date } = req.body;
+
+  try {
+
+    const userFound = await UserModel.findById(userId);
+
+    if (!userFound) {
+      res.json({Error: "User Id not valid"});
+    } else {
+      res.json(userFound);
+    }
+    
+  } catch(err) {
+    
+    res.json({Error: err});
+    
+  };
+
   res.json({userId: userId});
   
 })
