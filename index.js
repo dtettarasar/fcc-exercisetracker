@@ -114,6 +114,21 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
   
 });
 
+// Route to see a users' logged exercises
+app.get("/api/users/:_id/logs", (req, res) => {
+
+  const userId = req.params._id;
+  const { from, to, limit } = req.query;
+
+  console.log("userId: " + userId);
+  console.log("from: " + from);
+  console.log("to: " + to);
+  console.log("limit: " + limit);
+
+  res.send("hello");
+  
+});
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 })
