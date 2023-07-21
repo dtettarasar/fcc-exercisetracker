@@ -115,7 +115,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 });
 
 // Route to see a users' logged exercises
-app.get("/api/users/:_id/logs", (req, res) => {
+app.get("/api/users/:_id/logs", async (req, res) => {
 
   const userId = req.params._id;
   const { from, to, limit } = req.query;
@@ -124,6 +124,43 @@ app.get("/api/users/:_id/logs", (req, res) => {
   console.log("from: " + from);
   console.log("to: " + to);
   console.log("limit: " + limit);
+
+  try {
+
+    const userFound = await UserModel.findById(userId);
+
+    if (!userFound) {
+      
+      res.json({Error: "User Id not valid"});
+      return false;
+      
+    }
+
+    let dateObj = {};
+
+    if (from) {
+      dateObj["$gte"] = new Date(from);
+    }
+
+    if (to) {
+      dateObj["$lte"] = new Date(to);
+    }
+
+    let filter = {
+      user_id: id
+    }
+
+    if (from || to) {
+      filter.date = dateObj;
+    }
+
+    const exercise = await ExerciseModel.find(filter).limit(+limit ?? 300);
+    
+  } catch (err) {
+
+    res.json({Error: err});
+    
+  }
 
   res.send("hello");
   
