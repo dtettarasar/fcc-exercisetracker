@@ -15,13 +15,13 @@ const UserSchema = new Schema({
 });
 const UserModel = mongoose.model("User", UserSchema);
 
-const ExerciceSchema = new Schema({
+const ExerciseSchema = new Schema({
   user_id: {type: String, required: true},
   description: String, 
   duration: Number,
   date: Date
 });
-const ExerciceModel = mongoose.model("Exercice", ExerciceSchema);
+const ExerciseModel = mongoose.model("Exercise", ExerciseSchema);
 
 app.use(cors())
 app.use(express.static('public'))
@@ -33,6 +33,7 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html')
 });
 
+// Add User route
 app.post('/api/users', async (req, res) => {
 
   const userObj = new UserModel({
@@ -54,6 +55,7 @@ app.post('/api/users', async (req, res) => {
   
 });
 
+// Add Exercise route
 app.post('/api/users/:_id/exercises', async (req, res) => {
 
   const userId = req.body[':_id'];
@@ -68,7 +70,25 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     if (!userFound) {
       res.json({Error: "User Id not valid"});
     } else {
-      res.json(userFound);
+
+      const ExerciseObj = new ExerciseModel({
+        user_id: userId,
+        description, 
+        duration,
+        date: date ? new Date(date) : new Date()
+      });
+
+      const addedExercise = await ExerciseObj.save();
+
+      const resultObj = {
+        _id: userFound._id,
+        username: userFound.username,
+        description: addedExercise.description,
+        duration: addedExercise.duration,
+        date: new Date(addedExercise.date).toDateString()
+      }
+      
+      res.json(resultObj);
     }
     
   } catch(err) {
