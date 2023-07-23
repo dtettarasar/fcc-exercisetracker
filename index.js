@@ -13,7 +13,7 @@ mongoose.connect(process.env.DB_URL);
 const UserSchema = new Schema({
   username: String
 });
-const UserModel = mongoose.model("User", UserSchema);
+const User = mongoose.model("User", UserSchema);
 
 const ExerciseSchema = new Schema({
   user_id: {type: String, required: true},
@@ -21,7 +21,7 @@ const ExerciseSchema = new Schema({
   duration: Number,
   date: Date
 });
-const ExerciseModel = mongoose.model("Exercise", ExerciseSchema);
+const Exercise = mongoose.model("Exercise", ExerciseSchema);
 
 app.use(cors())
 app.use(express.static('public'))
@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
 // Get all users route
 app.get("/api/users", async (req, res) => {
 
-  const users = await UserModel.find({}).select("_id username");
+  const users = await User.find({}).select("_id username");
 
   if (!users) {
     res.send("No users");
@@ -49,7 +49,7 @@ app.get("/api/users", async (req, res) => {
 // Add User route
 app.post('/api/users', async (req, res) => {
 
-  const userObj = new UserModel({
+  const userObj = new User({
     username: req.body.username
   });
 
@@ -79,7 +79,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
 
   try {
 
-    const user = await UserModel.findById(id);
+    const user = await User.findById(id);
 
     if (!user) {
 
@@ -87,7 +87,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       
     } else {
 
-      const exerciseObj = new ExerciseModel({
+      const exerciseObj = new Exercise({
         user_id: user._id,
         description, 
         duration,
@@ -142,7 +142,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
 
   try {
 
-    const userFound = await UserModel.findById(userId);
+    const userFound = await User.findById(userId);
 
     if (!userFound) {
       
@@ -168,7 +168,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
       filter.date = dateObj;
     }
 
-    const exercises = await ExerciseModel.find(filter).limit(+limit ?? 300);
+    const exercises = await Exercise.find(filter).limit(+limit ?? 300);
 
     console.log(exercises);
 
