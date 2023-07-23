@@ -74,28 +74,37 @@ app.post('/api/users', async (req, res) => {
 // Add Exercise route
 app.post('/api/users/:_id/exercises', async (req, res) => {
 
-  const userId = req.body[':_id'];
-  console.log(userId);
-
+  const id = req.body[':_id'];
   const {description, duration, date } = req.body;
 
   try {
 
-    const userFound = await UserModel.findById(userId);
+    const user = await UserModel.findById(id);
 
-    if (!userFound) {
-      res.json({Error: "User Id not valid"});
+    if (!user) {
+
+      res.send('Could not find user');
+      
     } else {
 
-      const ExerciseObj = new ExerciseModel({
-        user_id: userId,
+      const exerciseObj = new ExerciseModel({
+        user_id: user._id,
         description, 
         duration,
         date: date ? new Date(date) : new Date()
       });
 
-      const addedExercise = await ExerciseObj.save();
+      const exercise = await exerciseObj.save();
 
+      res.json({
+        _id: user._id,
+        username: user.username,
+        description: exercise.description,
+        duration: exercise.duration,
+        date : new Date(exercise.date).toDateString()
+      });
+
+      /*
       const resultObj = {
         username: userFound.username,
         description: addedExercise.description,
@@ -105,11 +114,12 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       }
       
       res.json(resultObj);
+      */
     }
     
   } catch(err) {
-    
-    res.json({Error: err});
+    console.log(err);
+    res.send("There was an error saving the exercise");
     
   };
 
