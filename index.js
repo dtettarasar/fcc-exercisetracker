@@ -57,12 +57,15 @@ app.post('/api/users', async (req, res) => {
     
     const addedUser = await userObj.save();
     console.log(addedUser);
-    res.json(addedUser);
+    res.json({
+      username: addedUser.username,
+      _id: addedUser._id
+    });
     
     } catch(errMsg) {
     
     console.log(errMsg);
-    res.json({error: errMsg});
+    //res.json({error: errMsg});
     
   };
   
@@ -94,11 +97,11 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
       const addedExercise = await ExerciseObj.save();
 
       const resultObj = {
-        _id: userFound._id,
         username: userFound.username,
         description: addedExercise.description,
         duration: addedExercise.duration,
-        date: new Date(addedExercise.date).toDateString()
+        date: new Date(addedExercise.date).toDateString(),
+        _id: userFound._id
       }
       
       res.json(resultObj);
@@ -110,7 +113,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
     
   };
 
-  res.json({userId: userId});
+  //res.json({userId: userId});
   
 });
 
@@ -120,10 +123,12 @@ app.get("/api/users/:_id/logs", async (req, res) => {
   const userId = req.params._id;
   const { from, to, limit } = req.query;
 
+  /*
   console.log("userId: " + userId);
   console.log("from: " + from);
   console.log("to: " + to);
   console.log("limit: " + limit);
+  */
 
   try {
 
@@ -132,7 +137,6 @@ app.get("/api/users/:_id/logs", async (req, res) => {
     if (!userFound) {
       
       res.json({Error: "User Id not valid"});
-      return false;
       
     }
 
@@ -156,7 +160,7 @@ app.get("/api/users/:_id/logs", async (req, res) => {
 
     const exercises = await ExerciseModel.find(filter).limit(+limit ?? 300);
 
-    //console.log(exercises);
+    console.log(exercises);
 
     const logData = [];
 
