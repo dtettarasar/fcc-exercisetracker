@@ -147,22 +147,49 @@ app.get("/api/users/:_id/logs", async (req, res) => {
     }
 
     let filter = {
-      user_id: id
+      user_id: userId
     }
 
     if (from || to) {
       filter.date = dateObj;
     }
 
-    const exercise = await ExerciseModel.find(filter).limit(+limit ?? 300);
+    const exercises = await ExerciseModel.find(filter).limit(+limit ?? 300);
+
+    //console.log(exercises);
+
+    const logData = [];
+
+    for (let i = 0; i < exercises.length; i++) {
+      console.log(exercises[i]);
+
+      const exerciseData = {
+        description: exercises[i].description,
+        duration: exercises[i].duration,
+        date : exercises[i].date.toDateString()
+      }
+
+      logData.push(exerciseData);
+      
+    }
+    
+
+    res.json({
+      username: userFound.username,
+      count: exercises.length,
+      _id: userFound._id,
+      log: logData
+    })
     
   } catch (err) {
 
+    console.log(err);
+    
     res.json({Error: err});
     
   }
 
-  res.send("hello");
+  //res.send("hello");
   
 });
 
