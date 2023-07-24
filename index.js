@@ -55,17 +55,13 @@ app.post('/api/users', async (req, res) => {
 
   try {
     
-    const addedUser = await userObj.save();
-    console.log(addedUser);
-    res.json({
-      username: addedUser.username,
-      _id: addedUser._id
-    });
+    const user = await userObj.save();
+    console.log(user);
+    res.json(user);
     
-    } catch(errMsg) {
+    } catch(err) {
     
-    console.log(errMsg);
-    //res.json({error: errMsg});
+    console.log(err);
     
   };
   
