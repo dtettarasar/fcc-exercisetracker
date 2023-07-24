@@ -70,7 +70,7 @@ app.post('/api/users', async (req, res) => {
 // Add Exercise route
 app.post('/api/users/:_id/exercises', async (req, res) => {
 
-  const id = req.body[':_id'];
+  const id = req.params._id;
   const {description, duration, date } = req.body;
 
   try {
@@ -99,18 +99,7 @@ app.post('/api/users/:_id/exercises', async (req, res) => {
         duration: exercise.duration,
         date : new Date(exercise.date).toDateString()
       });
-
-      /*
-      const resultObj = {
-        username: userFound.username,
-        description: addedExercise.description,
-        duration: addedExercise.duration,
-        date: new Date(addedExercise.date).toDateString(),
-        _id: userFound._id
-      }
       
-      res.json(resultObj);
-      */
     }
     
   } catch(err) {
